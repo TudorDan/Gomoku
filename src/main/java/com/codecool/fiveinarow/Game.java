@@ -102,7 +102,16 @@ public class Game implements GameInterface {
         return null;
     }
 
+    /**
+     * Writes the value of player (a 1 or 2) into the row & col element of the board
+     * @param player number of player (1 or 2)
+     * @param row line number
+     * @param col column number
+     */
     public void mark(int player, int row, int col) {
+        if(row >= 0 && row < nRows && col >= 0 && col < nCols && board[row][col] == 0) {
+            board[row][col] = player;
+        }
     }
 
     public boolean hasWon(int player, int howMany) {
