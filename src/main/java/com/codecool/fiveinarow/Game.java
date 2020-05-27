@@ -4,13 +4,35 @@ public class Game implements GameInterface {
 
     private int[][] board;
 
+    /**
+     * Build new board with nRows x nCols dimensions
+     *
+     * @param nRows rows number
+     * @param nCols cols number
+     */
     public Game(int nRows, int nCols) {
+        board = new int[nRows][nCols];
+        for (int i = 0; i < nRows; i++) {
+            for (int j = 0; j < nCols; j++) {
+                board[i][j] = 0;
+            }
+        }
     }
 
+    /**
+     * Board getter
+     *
+     * @return game board
+     */
     public int[][] getBoard() {
         return board;
     }
 
+    /**
+     * Board setter
+     *
+     * @param board // game board
+     */
     public void setBoard(int[][] board) {
         this.board = board;
     }
