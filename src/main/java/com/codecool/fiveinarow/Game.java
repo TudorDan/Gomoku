@@ -9,8 +9,10 @@ public class Game implements GameInterface {
     private int[][] board;
     private int nRows;
     private int nCols;
-    private Terminal terminal = new Terminal();
+    private Terminal terminal;
     private int player;
+    private int moveCounter;
+    private boolean userQuit;
 
     /**
      * Build new board with nRows x nCols dimensions
@@ -23,6 +25,9 @@ public class Game implements GameInterface {
         this.nCols = nCols;
         this.board = new int[nRows][nCols];
         player = 1;
+        moveCounter = 0;
+        terminal = new Terminal();
+        userQuit = false;
 
         for (int row = 0; row < nRows; ++row) {
             for (int col = 0; col < nCols; ++col) {
@@ -65,13 +70,18 @@ public class Game implements GameInterface {
 
         while (wrongUserInput) {
             System.out.printf("Player %d choice: ", player);
-            String userInput = scan.nextLine();
+            String userInput = scan.nextLine().toUpperCase();
+
+            if(userInput.equals("QUIT")) {
+                userQuit = true;
+                break;
+            }
 
             wrongUserInput = false;
 
             //get valid row
             try {
-                char rowChar = Character.toUpperCase(userInput.charAt(0));
+                char rowChar = userInput.charAt(0);
                 if (rowChar >= 'A' && rowChar <= 'Z') {
                     move[0] = rowChar - 'A';
                 } else {
@@ -119,6 +129,7 @@ public class Game implements GameInterface {
     public void mark(int player, int row, int col) {
         if (row >= 0 && row < nRows && col >= 0 && col < nCols && board[row][col] == 0) {
             board[row][col] = player;
+            moveCounter++;
         }
     }
 
@@ -126,8 +137,12 @@ public class Game implements GameInterface {
         return false;
     }
 
+    /**
+     * Returns true if the board is full.
+     * @return boolean
+     */
     public boolean isFull() {
-        return false;
+        return moveCounter == nRows * nCols;
     }
 
     /**
@@ -163,12 +178,14 @@ public class Game implements GameInterface {
      * @param player winner
      */
     public void printResult(int player) {
-        if (isFull()) {
-            System.out.println("It's a tie!");
-        } else if (player == 1) {
-            System.out.println("X won!");
-        } else {
-            System.out.println("O won!");
+        if(!userQuit) {
+            if (isFull()) {
+                System.out.println("It's a tie!");
+            } else if (player == 1) {
+                System.out.println("X won!");
+            } else {
+                System.out.println("O won!");
+            }
         }
     }
 
@@ -190,6 +207,9 @@ public class Game implements GameInterface {
 
             // get player next move
             move = getMove(player);
+            if (userQuit) {
+                break;
+            }
             mark(player, move[0], move[1]);
 
             // check winning
