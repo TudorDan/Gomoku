@@ -10,6 +10,7 @@ public class Game implements GameInterface {
     private int nRows;
     private int nCols;
     private Terminal terminal = new Terminal();
+    private int player;
 
     /**
      * Build new board with nRows x nCols dimensions
@@ -21,6 +22,7 @@ public class Game implements GameInterface {
         this.nRows = nRows;
         this.nCols = nCols;
         this.board = new int[nRows][nCols];
+        player = 1;
 
         for (int row = 0; row < nRows; ++row) {
             for (int col = 0; col < nCols; ++col) {
@@ -49,13 +51,13 @@ public class Game implements GameInterface {
     }
 
     /**
-     *  Asks for user input and returns the coordinates of a valid move on board.
+     * Asks for user input and returns the coordinates of a valid move on board.
+     *
      * @param player number of player (1 or 2)
-     * @return array of 3 int [player, row, col]
+     * @return array of 2 int [row, col]
      */
     public int[] getMove(int player) {
-        int[] move = new int[3]; // move[0] = player ; move[1] = row; move[2] = col
-        move[0] = player;
+        int[] move = new int[2]; // move[0] = row; move[1] = col
         boolean wrongUserInput = true;
         Scanner scan = new Scanner(System.in);
 
@@ -68,25 +70,25 @@ public class Game implements GameInterface {
             //get valid row
             char rowChar = Character.toUpperCase(userInput.charAt(0));
             if (rowChar >= 'A' && rowChar <= 'Z') {
-                move[1] = rowChar - 'A';
+                move[0] = rowChar - 'A';
             } else {
                 wrongUserInput = true;
             }
 
             //get valid col
             try {
-                move[2] = Integer.parseInt(userInput.substring(1)) - 1;
+                move[1] = Integer.parseInt(userInput.substring(1)) - 1;
             } catch (Exception e) {
                 wrongUserInput = true;
             }
 
             //check if move on board
-            if (move[1] < 0 || move[1] > nRows - 1 || move[2] < 0 || move[2] > nCols - 1) {
+            if (move[0] < 0 || move[0] > nRows - 1 || move[1] < 0 || move[1] > nCols - 1) {
                 wrongUserInput = true;
             }
 
             //check if position free
-            if (board[move[1]][move[2]] == 0) {
+            if (board[move[0]][move[1]] == 0) {
                 wrongUserInput = true;
             }
             if (wrongUserInput) {
@@ -104,12 +106,13 @@ public class Game implements GameInterface {
 
     /**
      * Writes the value of player (a 1 or 2) into the row & col element of the board
+     *
      * @param player number of player (1 or 2)
-     * @param row line number
-     * @param col column number
+     * @param row    line number
+     * @param col    column number
      */
     public void mark(int player, int row, int col) {
-        if(row >= 0 && row < nRows && col >= 0 && col < nCols && board[row][col] == 0) {
+        if (row >= 0 && row < nRows && col >= 0 && col < nCols && board[row][col] == 0) {
             board[row][col] = player;
         }
     }
@@ -156,6 +159,43 @@ public class Game implements GameInterface {
     public void enableAi(int player) {
     }
 
+    /**
+     * Runs a whole 2-players game. Parameter howMany sets the win condition of the game
+     * @param howMany elements in a winning line
+     */
     public void play(int howMany) {
+        int[] move;
+        int winner = 0;
+        boolean win = false;
+
+        // game loop
+        while (!isFull()) {
+            printBoard();
+
+            // get player next move
+            move = getMove(player);
+            mark(player, move[0], move[1]);
+
+            // check winning
+            win = hasWon(player, howMany);
+            if(win) {
+                winner = player;
+                break;
+            }
+
+            // change player
+            if(player == 1) {
+                player = 2;
+            } else {
+                player = 1;
+            }
+        }
+
+        // check win conditions
+        if(win) {
+            System.out.println("The winner is player " + winner + "!");
+        } else {
+            System.out.println("It's a draw!");
+        }
     }
 }
