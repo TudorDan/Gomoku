@@ -12,17 +12,17 @@ public class Game implements GameInterface {
     /**
      * Build new board with nRows x nCols dimensions
      *
-     * @param var1 rows number
-     * @param var2 cols number
+     * @param nRows rows number
+     * @param nCols cols number
      */
-    public Game(int var1, int var2) {
-        this.nRows = var1;
-        this.nCols = var2;
-        this.board = new int[var1][var2];
+    public Game(int nRows, int nCols) {
+        this.nRows = nRows;
+        this.nCols = nCols;
+        this.board = new int[nRows][nCols];
 
-        for (int var3 = 0; var3 < var1; ++var3) {
-            for (int var4 = 0; var4 < var2; ++var4) {
-                this.board[var3][var4] = 0;
+        for (int row = 0; row < nRows; ++row) {
+            for (int col = 0; col < nCols; ++col) {
+                this.board[row][col] = 0;
             }
         }
 
