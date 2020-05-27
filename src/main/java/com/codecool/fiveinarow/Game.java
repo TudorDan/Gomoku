@@ -101,7 +101,6 @@ public class Game implements GameInterface {
                 System.out.println("Wrong coordinates! Please try again!");
             }
         }
-        //scan.close();
 
         return move;
     }
@@ -159,7 +158,18 @@ public class Game implements GameInterface {
         System.out.println("\n");
     }
 
+    /**
+     * Displays the result of the game.
+     * @param player winner
+     */
     public void printResult(int player) {
+        if (isFull()) {
+            System.out.println("It's a tie!");
+        } else if (player == 1) {
+            System.out.println("X won!");
+        } else {
+            System.out.println("O won!");
+        }
     }
 
     public void enableAi(int player) {
@@ -167,12 +177,12 @@ public class Game implements GameInterface {
 
     /**
      * Runs a whole 2-players game. Parameter howMany sets the win condition of the game
+     *
      * @param howMany elements in a winning line
      */
     public void play(int howMany) {
         int[] move;
         int winner = 0;
-        boolean win = false;
 
         // game loop
         while (!isFull()) {
@@ -183,25 +193,19 @@ public class Game implements GameInterface {
             mark(player, move[0], move[1]);
 
             // check winning
-            win = hasWon(player, howMany);
-            if(win) {
+            if (hasWon(player, howMany)) {
                 winner = player;
                 break;
             }
 
             // change player
-            if(player == 1) {
+            if (player == 1) {
                 player = 2;
             } else {
                 player = 1;
             }
         }
 
-        // check win conditions
-        if(win) {
-            System.out.println("The winner is player " + winner + "!");
-        } else {
-            System.out.println("It's a draw!");
-        }
+        printResult(winner);
     }
 }
