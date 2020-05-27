@@ -2,6 +2,8 @@ package com.codecool.fiveinarow;
 
 import com.codecool.termlib.Terminal;
 
+import java.util.Scanner;
+
 public class Game implements GameInterface {
 
     private int[][] board;
@@ -46,8 +48,54 @@ public class Game implements GameInterface {
         this.board = board;
     }
 
+    /**
+     *  Asks for user input and returns the coordinates of a valid move on board.
+     * @param player number of player (1 or 2)
+     * @return array of 3 int [player, row, col]
+     */
     public int[] getMove(int player) {
-        return null;
+        int[] move = new int[3]; // move[0] = player ; move[1] = row; move[2] = col
+        move[0] = player;
+        boolean wrongUserInput = true;
+        Scanner scan = new Scanner(System.in);
+
+        while (wrongUserInput) {
+            System.out.printf("Player %d choice: ", player);
+            String userInput = scan.nextLine();
+
+            wrongUserInput = false;
+
+            //get valid row
+            char rowChar = Character.toUpperCase(userInput.charAt(0));
+            if (rowChar >= 'A' && rowChar <= 'Z') {
+                move[1] = rowChar - 'A';
+            } else {
+                wrongUserInput = true;
+            }
+
+            //get valid col
+            try {
+                move[2] = Integer.parseInt(userInput.substring(1)) - 1;
+            } catch (Exception e) {
+                wrongUserInput = true;
+            }
+
+            //check if move on board
+            if (move[1] < 0 || move[1] > nRows - 1 || move[2] < 0 || move[2] > nCols - 1) {
+                wrongUserInput = true;
+            }
+
+            //check if position free
+            if (board[move[1]][move[2]] == 0) {
+                wrongUserInput = true;
+            }
+            if (wrongUserInput) {
+                System.out.println("Wrong coordinates! Please try again!");
+            }
+        }
+        scan.close();
+
+        return move;
     }
 
     public int[] getAiMove(int player) {
