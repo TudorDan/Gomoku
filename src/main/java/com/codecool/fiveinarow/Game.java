@@ -72,18 +72,17 @@ public class Game implements GameInterface {
         this.terminal.clearScreen();
         this.terminal.moveTo(0, 0);
 
-        int var1;
-        for (var1 = 0; var1 < this.nCols; ++var1) {
-            System.out.printf("%3d", var1 + 1);
+        for (int col = 0; col < this.nCols; ++col) {
+            System.out.printf("%3d", col + 1);
         }
 
-        for (var1 = 0; var1 < this.nRows; ++var1) {
-            System.out.printf("\n%c", 65 + var1);
+        for (int row = 0; row < this.nRows; ++row) {
+            System.out.printf("\n%c", 'A' + row);
 
-            for (int var2 = 0; var2 < this.nCols; ++var2) {
-                if (this.board[var1][var2] == 0) {
+            for (int col = 0; col < this.nCols; ++col) {
+                if (this.board[row][col] == 0) {
                     System.out.print(" . ");
-                } else if (this.board[var1][var2] == 1) {
+                } else if (this.board[row][col] == 1) {
                     System.out.print(" X ");
                 } else {
                     System.out.print(" O ");
