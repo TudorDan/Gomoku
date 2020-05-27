@@ -58,6 +58,8 @@ public class Game implements GameInterface {
      */
     public int[] getMove(int player) {
         int[] move = new int[2]; // move[0] = row; move[1] = col
+        move[0] = -1;
+        move[1] = -1;
         boolean wrongUserInput = true;
         Scanner scan = new Scanner(System.in);
 
@@ -68,10 +70,14 @@ public class Game implements GameInterface {
             wrongUserInput = false;
 
             //get valid row
-            char rowChar = Character.toUpperCase(userInput.charAt(0));
-            if (rowChar >= 'A' && rowChar <= 'Z') {
-                move[0] = rowChar - 'A';
-            } else {
+            try {
+                char rowChar = Character.toUpperCase(userInput.charAt(0));
+                if (rowChar >= 'A' && rowChar <= 'Z') {
+                    move[0] = rowChar - 'A';
+                } else {
+                    wrongUserInput = true;
+                }
+            } catch (Exception e) {
                 wrongUserInput = true;
             }
 
@@ -88,14 +94,14 @@ public class Game implements GameInterface {
             }
 
             //check if position free
-            if (board[move[0]][move[1]] == 0) {
+            if (!wrongUserInput && board[move[0]][move[1]] != 0) {
                 wrongUserInput = true;
             }
             if (wrongUserInput) {
                 System.out.println("Wrong coordinates! Please try again!");
             }
         }
-        scan.close();
+        //scan.close();
 
         return move;
     }
